@@ -1,0 +1,25 @@
+<div class="container">
+    <div class="row">
+        <div class="col-10">
+            <form #postForm="ngForm" class="row g-3">
+                <div class="col-md-6">
+                    <label for="name" class="form-label">Tên</label>
+                    <input type="text" class="form-control" [(ngModel)]="room.name" id="name" name="name" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="address" class="form-label">Địa chỉ</label>
+                    <input type="text" class="form-control" [(ngModel)]="room.address" id="address" name="address">
+                </div>
+                <div class="col-md-6">
+                    <label for="description" class="form-label">Mô tả</label>
+                    <input type="text" class="form-control" [(ngModel)]="room.description" id="description" name="description" required>
+                </div>
+                <div class="col-12">
+                    <!-- <button [disabled]="!postForm.valid" style="margin-right: 10px;" type="submit" class="btn btn-primary" (click)="addUser(name.value,dob.value,phone.value,address.value,img.value);">Lưu</button> -->
+                    <button [disabled]="!postForm.valid" style="margin-right: 10px;" type="submit" class="btn btn-primary" (click)="onSubmit();">Lưu</button>
+                    <button style="margin-right: 10px;" class="btn btn-primary" (click)="goBack();">Trở về</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,166 @@
+<p-dialog header="Thêm mới" [(visible)]="display">
+  <div *ngIf="user" class="container">
+    <div class="row">
+      <div class="col-10">
+        <form class="row g-3" #form="ngForm" (ngSubmit)="save(); form.resetForm()">
+          <!-- <div class="row g-3"> -->
+          <div class="col-md-6">
+            <label for="name" class="form-label">Họ tên</label>
+            <input [(ngModel)]="user.name" type="text" class="form-control" id="name" name="name" required>
+          </div>
+          <div class="col-md-6">
+            <label for="dob" class="form-label">Ngày sinh:</label>
+            <span>{{user.dateOfBirth | date: 'dd/MM/yyyy'}}</span>
+            <input [(ngModel)]="user.dateOfBirth" type="date" class="form-control" id="dob" name="dob">
+          </div>
+          <div class="col-md-6">
+            <label for="phone" class="form-label">Số điện thoại</label>
+            <input [(ngModel)]="user.phoneNumber" type="text" class="form-control" id="phone" name="phone" required>
+          </div>
+          <div class="col-md-6">
+            <label for="address" class="form-label">Địa chỉ</label>
+            <input [(ngModel)]="user.address" type="text" class="form-control" id="address" name="address" required>
+          </div>
+          <div class="col-md-6">
+            <label for="avatar" class="form-label">Image URL</label>
+            <input [(ngModel)]="user.avatar" type="text" class="form-control" id="avatar" #avatar name="avatar">
+          </div>
+          <div class="col-md-6">
+            <label for="avatar" class="form-label">Phòng ban</label>
+            <select class="form-select" aria-label="Default select example" [(ngModel)]="user.roomId" name="room">
+              <!-- <option selected >{{user.roomId}}</option> -->
+              <option *ngFor="let room of rooms" value="{{room.id}}">{{room.name}}</option>
+            </select>
+          </div>
+          <div class="col-xs-12">
+            <img style="height: 150px;" [src]="user.avatar" class="img-responsive">
+          </div>
+          <div class="col-12">
+            <button type="submit" [disabled]="!form.valid" style="margin-right: 10px;"
+              class="btn btn-primary">Lưu</button>
+            <button (click)="goBack();" style="margin-right: 10px;" class="btn btn-primary">Hủy</button>
+          </div>
+          <!-- </div> -->
+        </form>
+      </div>
+    </div>
+  </div>
+</p-dialog>
+
+<div class="container">
+  <div class="row">
+    <div class="col-10">
+      <h5>Quản lý người dùng</h5><br>
+      <app-user-detail *ngIf="check" [user]=selectedUser (close)="onClose()"></app-user-detail><br>
+      <!-- <button type="button" class="btn btn-primary"><a routerLink="/user-add" class="nav-link">Thêm mới</a></button><br> -->
+      <button type="button" class="btn btn-primary" (click)="showDialog()">Thêm mới</button><br>
+      <br>
+      <!-- <div class="mb-3 row">
+        <div class="col-sm-8">
+          <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="Tìm kiếm">
+        </div>
+      </div> -->
+      <!-- <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">#Id</th>
+            <th scope="col">Họ tên</th>
+            <th scope="col">Ngày sinh</th>
+            <th scope="col">Số điện thoại</th>
+            <th scope="col">Địa chỉ</th>
+            <th scope="col">Hành động</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users | filter:searchText">
+            <th scope="row">{{user.id}}</th>
+            <td>{{user.name}}</td>
+            <td>{{user.dateOfBirth | date: 'dd/MM/yyyy'}}</td>
+            <td>{{user.phoneNumber}}</td>
+            <td>{{user.address}}</td>
+            <td>
+              <button (click)="onSelect(user)" style="margin-right: 5px;" type="button" class="btn btn-success">Chi
+                tiết</button>
+              <button style="margin-right: 5px;" class="btn btn-warning"><a routerLink="/user-update/{{user.id}}"
+                  class="nav-link">Sửa</a></button>
+              <button (click)="delete(user)" style="margin-right: 5px;" type="button" class="btn btn-danger">Xóa
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table> -->
+
+
+      <p-table #dt1 [value]="users" [paginator]="true" [rows]="4" [showCurrentPageReport]="true"
+        responsiveLayout="scroll" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [globalFilterFields]="['name']">
+        <ng-template pTemplate="caption">
+          <div class="flex align-items-center justify-content-between">
+            <h5 class="m-0">Danh sách người dùng</h5>
+            <span class="p-input-icon-left">
+              <!-- <i class="pi pi-search"></i> -->
+              <input pInputText type="text" (input)="dt1.filterGlobal($any($event.target).value, 'contains')"
+                placeholder="Search..." />
+            </span>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="id">#Id<p-sortIcon field="id"></p-sortIcon>
+            </th>
+            <th pSortableColumn="name">Họ tên<p-sortIcon field="name"></p-sortIcon>
+            </th>
+            <th pSortableColumn="dateOfBirth">Ngày sinh<p-sortIcon field="dateOfBirth"></p-sortIcon>
+            </th>
+            <th scope="col">Số điện thoại</th>
+            <th scope="col">Địa chỉ</th>
+            <th scope="col">Id Phòng</th>
+            <th scope="col">Hành động</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-user>
+          <tr>
+            <td scope="row">{{user.id}}</td>
+            <td>{{user.name}}</td>
+            <td>{{user.dateOfBirth | date: 'dd/MM/yyyy'}}</td>
+            <td>{{user.phoneNumber}}</td>
+            <td>{{user.address}}</td>
+            <td>{{user.roomId}}</td>
+            <td>
+              <!-- <button (click)="onSelect(user)" style="margin-right: 5px;" type="button" class="btn btn-success">Chi
+                tiết</button>
+              <button style="margin-right: 5px;" class="btn btn-warning"><a routerLink="/user-update/{{user.id}}"
+                  class="nav-link">Sửa</a></button>
+              <button (click)="delete(user)" style="margin-right: 5px;" type="button" class="btn btn-danger">Xóa
+              </button> -->
+              <button (click)="onSelect(user)" type="button" class="btn btn-outline-primary border-0"><i
+                  style="font-size: 150%;" class="fa fa-info-circle" aria-hidden="true"></i></button>
+              <button routerLink="/user-update/{{user.id}}" type="button" class="btn btn-outline-warning border-0"><i
+                  style="font-size: 150%;" class="fa fa-pencil" aria-hidden="true"></i></button>
+
+              <button (click)="delete(user)" type="button" class="btn btn-outline-danger border-0"><i
+                  style="font-size: 150%;" class="fa fa-trash" aria-hidden="true"></i></button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorleft">
+          <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+        </ng-template>
+        <ng-template pTemplate="paginatorright">
+          <p-button type="button" icon="pi pi-cloud" styleClass="p-button-text"></p-button>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+<!-- <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog> -->
+<p-confirmDialog #cd [style]="{width: '50vw'}">
+  <ng-template pTemplate="header">
+      <h3>Xác nhận</h3>
+  </ng-template>
+  <ng-template pTemplate="footer">
+      <button type="button" pButton icon="pi pi-times" label="Không" (click)="cd.reject()"></button>
+      <button type="button" pButton icon="pi pi-check" label="Có" (click)="cd.accept()"></button>
+  </ng-template>
+</p-confirmDialog>
+
